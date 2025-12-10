@@ -73,125 +73,14 @@
       <div class="about-container">
         <h2 class="about-title">About Me</h2>
         <div class="divider"></div>
-
-        <div class="about-text">
-          I’m <span class="highlight">Dhathrendra</span>, but you can call me
-          <span class="highlight">Dhath</span>. Currently pursuing my Bachelor’s
-          at <span class="highlight">IIT Madras</span>, diving deep into the
-          intersection of <span class="highlight">neuroscience</span>,
-          <span class="highlight">psychology</span>,
-          <span class="highlight">biology</span>, and
-          <span class="highlight">programming</span>. I’m obsessed with how the
-          human brain works - and how we can mirror biological intelligence in
-          machines.
-
-          <br /><br />
-
-          On campus, I’m heavily involved with
-          <span class="highlight">Shaastra</span>,
-          <span class="highlight">CFI clubs</span>, and the
-          <span class="highlight">Debating Society</span>. These roles have
-          sharpened my skills in leadership, event management, networking, and
-          building high-energy teams that actually get work done.
-
-          <br /><br />
-
-          Outside the classroom, I’m a perpetual learner - always chasing new
-          challenges. You’ll find me reading, hitting the gym, traveling, or
-          just chilling with family and friends. Born and raised in
-          <span class="highlight">Hyderabad</span> - yes, I treat
-          <span class="highlight">biryani</span> like religion and can disappear
-          for hours into <span class="highlight">music</span>,
-          <span class="highlight">movies</span>, and
-          <span class="highlight">anime</span>.
-
-          <br /><br />
-
-          Long-term? I want to build things that sit at the crossroads of
-          biology, tech, and real-world impact. If it’s meaningful and pushes
-          boundaries - I’m in. Let’s connect and create something legendary.
-        </div>
+        <div class="about-text" id="about-text">Loading...</div>
       </div>
     </section>
 
     <section id="journey" class="journey-page">
       <h2 class="path-title">Path and Progress</h2>
-
-      <div class="timeline-container">
-        <div class="timeline-block">
-          <div class="timeline-icon education">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <div class="timeline-content">
-            <h3>Bachelor’s of Science in Biosciences</h3>
-            <p class="org">Indian Institute of Technology Madras</p>
-            <p class="date">2025 – 2029 (Ongoing)</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon education">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <div class="timeline-content">
-            <h3>Bachelor’s of Science in Data Science and Applications</h3>
-            <p class="org">Indian Institute of Technology Madras</p>
-            <p class="date">2025 – 2029 (Ongoing)</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon biotech"><i class="fas fa-dna"></i></div>
-          <div class="timeline-content">
-            <h3>Deputy Coordinator</h3>
-            <p class="org">Biotech Club, CFI, IIT Madras</p>
-            <p class="date">Nov 2025 – Present</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon horizon">
-            <i class="fas fa-satellite-dish"></i>
-          </div>
-          <div class="timeline-content">
-            <h3>Deputy Coordinator</h3>
-            <p class="org">
-              Horizon – Physics and Astronomy Club, CFI, IIT Madras
-            </p>
-            <p class="date">Nov 2025 – Present</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon blockchain">
-            <i class="fas fa-code"></i>
-          </div>
-          <div class="timeline-content">
-            <h3>Deputy Coordinator</h3>
-            <p class="org">WebOps and Blockchain Club, CFI, IIT Madras</p>
-            <p class="date">Nov 2025 – Present</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon volunteer"><i class="fas fa-leaf"></i></div>
-          <div class="timeline-content">
-            <h3>Volunteer</h3>
-            <p class="org">Biogen, EnW, Shaastra, IIT Madras</p>
-            <p class="date">Nov 2025 – Present</p>
-          </div>
-        </div>
-
-        <div class="timeline-block">
-          <div class="timeline-icon debate">
-            <i class="fas fa-microphone-alt"></i>
-          </div>
-          <div class="timeline-content">
-            <h3>Associate</h3>
-            <p class="org">IITM Parliamentary Debate, by Oratory Club IITM</p>
-            <p class="date">Oct 2025 – Present</p>
-          </div>
-        </div>
+      <div class="timeline-container" id="timeline-container">
+        Loading experiences...
       </div>
     </section>
 
@@ -271,6 +160,122 @@
     </section>
 
     <script>
+      const API_URL = "https://portfolio-api-pjzq.onrender.com/api";
+
+      fetch(`${API_URL}/about`)
+        .then((response) => {
+          if (!response.ok) throw new Error("API not reachable");
+          return response.json();
+        })
+        .then((data) => {
+          let paragraphs = data.about
+            .split("\n\n")
+            .map((p) => p.trim())
+            .filter((p) => p.length > 0);
+
+          let html = paragraphs
+            .map(
+              (para, index, array) =>
+                `<p>${para.replace(/\n/g, "<br>")}</p>` +
+                (index < array.length - 1 ? "<br>" : "")
+            )
+            .join("");
+
+          const highlights = [
+            "Dhathrendra",
+            "Dhath",
+            "IIT Madras",
+            "neuroscience",
+            "psychology",
+            "biology",
+            "programming",
+            "Shaastra",
+            "CFI clubs",
+            "Hyderabad",
+            "biryani",
+            "music",
+            "movies",
+            "anime",
+            "debating society",
+          ];
+
+          highlights.forEach((word) => {
+            const regex = new RegExp(`(${word})`, "gi");
+            html = html.replace(regex, '<span class="highlight">$1</span>');
+          });
+
+          document.getElementById("about-text").innerHTML = html;
+        })
+        .catch((err) => {
+          console.error(err);
+          document.getElementById("about-text").innerHTML =
+            "<p style='color:#ff3366'>Failed to load About section (check console)</p>";
+        });
+
+      fetch(`${API_URL}/education`)
+        .then((r) => r.json())
+        .then((edu) => {
+          fetch(`${API_URL}/experience`)
+            .then((r) => r.json())
+            .then((exp) => {
+              const container = document.getElementById("timeline-container");
+              container.innerHTML = "";
+              edu.forEach((item) => {
+                container.innerHTML += `
+            <div class="timeline-block">
+              <div class="timeline-icon education">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="timeline-content">
+                <h3>${item.degree}</h3>
+                <p class="org">${item.institute}</p>
+                <p class="date">${item.years}</p>
+              </div>
+            </div>`;
+              });
+
+              exp.forEach((item) => {
+                let iconClass = "fa-briefcase";
+                let wrapperClass = "";
+
+                if (item.org.includes("Biotech"))
+                  (wrapperClass = "biotech"), (iconClass = "fa-dna");
+                else if (item.org.includes("Horizon"))
+                  (wrapperClass = "horizon"), (iconClass = "fa-satellite-dish");
+                else if (
+                  item.org.includes("WebOps") ||
+                  item.org.includes("Blockchain")
+                ) {
+                  wrapperClass = "blockchain";
+                  iconClass = "fa-code";
+                } else if (item.org.includes("Biogen"))
+                  (wrapperClass = "volunteer"), (iconClass = "fa-leaf");
+                else if (
+                  item.org.includes("Debate") ||
+                  item.org.includes("Oratory")
+                ) {
+                  (wrapperClass = "debate"), (iconClass = "fa-microphone-alt");
+                }
+
+                container.innerHTML += `
+            <div class="timeline-block">
+              <div class="timeline-icon ${wrapperClass}">
+                <i class="fas ${iconClass}"></i>
+              </div>
+              <div class="timeline-content">
+                <h3>${item.role}</h3>
+                <p class="org">${item.org}</p>
+                <p class="date">${item.date}</p>
+              </div>
+            </div>`;
+              });
+            });
+        })
+        .catch(() => {
+          document.getElementById("timeline-container").innerHTML =
+            "<p style='color:#ff3366'>Failed to load Journey</p>";
+        });
+
       const hamburger = document.querySelector(".hamburger");
       const mobileMenu = document.querySelector(".mobile-menu");
 
